@@ -1,46 +1,39 @@
-// Registratiepagina voor gebruikers
 <?php
 require_once 'includes/db.php';
-require_once 'classes/User.php';
+session_start();
 
-$message = ""; 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $user = new User($pdo);
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $role = 'student'; 
 
-    if ($user->register($username, $email, $password)) {
-        $message = "Registratie gelukt!";
-    } else {
-        $message = "Registratie mislukt.";
-    }
+    $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role, bio, profileImage, website) VALUES (?, ?, ?, ?, '', '', '')");
+    $stmt->execute([$username, $email, $password, $role]);
+
+    $userId = $pdo->lastInsertId();
+    $_SESSION['user_id'] = $userId;
+
+    header('Location: index.php');
+    exit;
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <title>Registreren</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
-    <h2>Registreren</h2>
-    <p><?= $message ?></p>
-    <form method="POST" action="">
-        <label>Gebruikersnaam:</label><br>
-        <input type="text" name="username" required><br>
+<?php require_once 'includes/header.php'; ?>
 
-        <label>E-mail:</label><br>
-        <input type="email" name="email" required><br>
+<h2>Registreren</h2>
 
-        <label>Wachtwoord:</label><br>
-        <input type="password" name="password" required><br><br>
+<form method="POST" class="mb-4">
+    <div class="mb-2">
+        <input type="text" name="username" class="form-control" placeholder="Gebruikersnaam" required>
+    </div>
+    <div class="mb-2">
+        <input type="email" name="email" class="form-control" placeholder="Email" required>
+    </div>
+    <div class="mb-2">
+        <input type="password" name="password" class="form-control" placeholder="Wachtwoord" required>
+    </div>
+    <button class="btn btn-primary" type="submit">Registreer</button>
+</form>
 
-        <input type="submit" value="Registreren">
-    </form>
-</body>
-</html>
+<?php require_once 'includes/footer.php'; ?>
