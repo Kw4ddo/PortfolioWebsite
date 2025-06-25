@@ -1,4 +1,3 @@
-// Dit is het profiel van de gebruiker
 <?php
 class UserProfile {
     private $bio;

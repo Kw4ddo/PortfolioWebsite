@@ -1,4 +1,3 @@
-// Het registeren en inloggen van gebruikers
 <?php
 class User {
     private $username;

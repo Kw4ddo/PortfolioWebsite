@@ -1,37 +1,48 @@
-// inloggen
 <?php
 session_start();
-
 require_once 'includes/db.php';
-require_once 'classes/User.php';   
+require_once 'classes/User.php';
 
-if (isset($_POST['login'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+$user = new User($pdo);
+$error = '';
 
-    $user = new User($db);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
 
     if ($user->login($email, $password)) {
-
         header("Location: dashboard.php");
         exit();
     } else {
-        echo "Ongeldige inloggegevens.";
+        $error = "Ongeldige inloggegevens.";
     }
 }
-
 ?>
 
-<form method="post" action="">
-  <div>
-    <label for="email">E-mailadres</label>
-    <input type="email" name="email" id="email" required>
-  </div>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Inloggen</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <form method="post" action="">
+    <div>
+      <label for="email">E-mailadres</label>
+      <input type="email" name="email" id="email" required>
+    </div>
 
-  <div>
-    <label for="password">Wachtwoord</label>
-    <input type="password" name="password" id="password" required>
-  </div>
+    <div>
+      <label for="password">Wachtwoord</label>
+      <input type="password" name="password" id="password" required>
+    </div>
 
-  <button type="submit" name="login">Inloggen</button>
-</form>
+    <?php if (!empty($error)): ?>
+      <p style="color:red;"><?= htmlspecialchars($error) ?></p>
+    <?php endif; ?>
+
+    <button type="submit" name="login">Inloggen</button>
+  </form>
+</body>
+</html>

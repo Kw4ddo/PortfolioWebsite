@@ -1,4 +1,3 @@
-// school opdrachten extended vanuit project.php
 <?php
 require_once 'Project.php';
 

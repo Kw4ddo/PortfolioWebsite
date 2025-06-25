@@ -1,5 +1,10 @@
 <?php
 session_start();
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: index.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +26,7 @@ session_start();
       <ul class="navbar-nav ms-auto">
         <?php if (isset($_SESSION['user_id'])): ?>
           <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
+          <li class="nav-item"><a class="nav-link" href="?logout=true">Logout</a></li>
         <?php else: ?>
           <li class="nav-item"><a class="nav-link" href="inlog.php">Login</a></li>
           <li class="nav-item"><a class="nav-link" href="register.php">Register</a></li>
