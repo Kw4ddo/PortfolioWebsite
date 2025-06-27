@@ -24,8 +24,9 @@ if (isset($_GET['logout'])) {
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <?php if (isset($_SESSION['user_id'])): ?>
+        <?php if (isset($_SESSION['id'])): ?>
           <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="profile.php">Profiel</a></li>
           <li class="nav-item"><a class="nav-link" href="?logout=true">Logout</a></li>
         <?php else: ?>
           <li class="nav-item"><a class="nav-link" href="inlog.php">Login</a></li>

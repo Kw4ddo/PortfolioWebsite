@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$username, $email, $password, $role]);
 
     $userId = $pdo->lastInsertId();
-    $_SESSION['user_id'] = $userId;
+    $_SESSION['id'] = $userId;
 
     header('Location: index.php');
     exit;

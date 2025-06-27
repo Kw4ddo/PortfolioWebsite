@@ -28,6 +28,9 @@ $projects = $stmt->fetchAll();
         <?php foreach ($projects as $project): ?>
             <div class="col-md-4">
                 <div class="card mb-4">
+                    <?php if (!empty($project['image'])): ?>
+                        <img src="assets/img/<?= htmlspecialchars($project['image']); ?>" class="card-img-top" style="max-height:200px;object-fit:cover;">
+                    <?php endif; ?>
                     <div class="card-body">
                         <h5 class="card-title"><?= htmlspecialchars($project['title']); ?></h5>
                         <p class="card-text"><?= htmlspecialchars(substr($project['description'], 0, 100)); ?>...</p>

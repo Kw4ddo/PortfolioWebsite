@@ -1,4 +1,3 @@
-// FreelanceProject: uitbreiding van Project met extra info over klanten en budgetten
 <?php
 require_once 'Project.php';
 
