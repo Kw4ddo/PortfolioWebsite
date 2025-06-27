@@ -32,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if (isset($_GET['delete'])) {
-    $stmt = $pdo->prepare("DELETE FROM projects WHERE id = ?");
-    $stmt->execute([$_GET['delete']]);
+    $stmt = $pdo->prepare("DELETE FROM projects WHERE id = ? AND user_id = ?");
+    $stmt->execute([$_GET['delete'], $_SESSION['id']]);
     echo "<div class='alert alert-danger'>Project verwijderd!</div>";
 }
 
