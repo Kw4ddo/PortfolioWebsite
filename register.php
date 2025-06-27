@@ -1,20 +1,18 @@
 <?php
 require_once 'includes/db.php';
+require_once 'classes/User.php';
 session_start();
+
+$user = new User($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $role = 'student'; 
+    $password = $_POST['password'];
 
-    $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role, bio, profileImage, website) VALUES (?, ?, ?, ?, '', '', '')");
-    $stmt->execute([$username, $email, $password, $role]);
+    $user->register($username, $email, $password);
 
-    $userId = $pdo->lastInsertId();
-    $_SESSION['id'] = $userId;
-
-    header('Location: index.php');
+    header('Location: inlog.php');
     exit;
 }
 ?>

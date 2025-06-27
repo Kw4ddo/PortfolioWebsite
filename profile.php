@@ -8,7 +8,7 @@ if (!isset($_SESSION['id'])) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT username, email, role, bio, profileImage, website FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['id']]);
 $userData = $stmt->fetch();
 
@@ -18,31 +18,7 @@ $userProfile = new UserProfile(
     $userData['website'] ?? ''
 );
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $bio = $_POST['bio'];
-    $website = $_POST['website'];
-    $profileImage = $userProfile->getProfileImage();
 
-    if (isset($_FILES['profileImage']) && $_FILES['profileImage']['error'] === UPLOAD_ERR_OK) {
-        $ext = pathinfo($_FILES['profileImage']['name'], PATHINFO_EXTENSION);
-        $filename = uniqid() . '.' . $ext;
-        move_uploaded_file($_FILES['profileImage']['tmp_name'], 'assets/img/' . $filename);
-        $profileImage = $filename;
-    }
-
-    $stmt = $pdo->prepare("UPDATE users SET bio = ?, website = ?, profileImage = ? WHERE id = ?");
-    $stmt->execute([$bio, $website, $profileImage, $_SESSION['id']]);
-
-    $userProfile->setBio($bio);
-    $userProfile->setWebsite($website);
-    $userProfile->setProfileImage($profileImage);
-
-    $userData['bio'] = $bio;
-    $userData['website'] = $website;
-    $userData['profileImage'] = $profileImage;
-
-    echo "<div class='alert alert-success'>Profiel bijgewerkt!</div>";
-}
 ?>
 
 <h2>Mijn Account</h2>

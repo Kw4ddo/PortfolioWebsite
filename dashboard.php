@@ -1,6 +1,9 @@
 <?php
 require_once 'includes/db.php';
 require_once 'includes/header.php';
+require_once 'classes/Project.php';
+require_once 'classes/FreelanceProject.php';
+require_once 'classes/SchoolProject.php';
 
 if (!isset($_SESSION['id'])) {
     header('Location: login.php');
@@ -39,7 +42,21 @@ if (isset($_GET['delete'])) {
 
 $stmt = $pdo->prepare("SELECT * FROM projects WHERE user_id = ?");
 $stmt->execute([$_SESSION['id']]);
-$projects = $stmt->fetchAll();
+$projectRows = $stmt->fetchAll();
+
+$projects = [];
+foreach ($projectRows as $row) {
+    if ($row['category'] === 'freelance') {
+        $projects[] = new FreelanceProject($row['title'], $row['description'], $row['date'], $row['category'], $row['image'], isset($row['clientName']) ? $row['clientName'] : '', isset($row['budget']) ? $row['budget'] : ''
+        );
+    } elseif ($row['category'] === 'school') {
+        $projects[] = new SchoolProject($row['title'], $row['description'], $row['date'], $row['category'], $row['image'], isset($row['subject']) ? $row['subject'] : '', isset($row['teacherName']) ? $row['teacherName'] : ''
+        );
+    } else {
+        $projects[] = new Project($row['title'], $row['description'], $row['date'], $row['category'], $row['image']
+        );
+    }
+}
 ?>
 
 <h2>Dashboard</h2>
@@ -77,19 +94,19 @@ $projects = $stmt->fetchAll();
         <th>Datum</th>
         <th>Acties</th>
     </tr>
-    <?php foreach ($projects as $project): ?>
+    <?php foreach ($projects as $index => $project): ?>
         <tr>
             <td>
-                <?php if (!empty($project['image'])): ?>
-                    <img src="assets/img/<?= htmlspecialchars($project['image']); ?>" width="80">
+                <?php if (!empty($project->getImage())): ?>
+                    <img src="assets/img/<?= htmlspecialchars($project->getImage()); ?>" width="80">
                 <?php endif; ?>
             </td>
-            <td><?= htmlspecialchars($project['title']); ?></td>
-            <td><?= htmlspecialchars($project['category']); ?></td>
-            <td><?= htmlspecialchars($project['date']); ?></td>
+            <td><?= htmlspecialchars($project->getTitle()); ?></td>
+            <td><?= htmlspecialchars($project->getCategory()); ?></td>
+            <td><?= htmlspecialchars($project->getDate()); ?></td>
             <td>
-                <a href="project.php?id=<?= $project['id']; ?>" class="btn btn-info btn-sm">Bekijken</a>
-                <a href="?delete=<?= $project['id']; ?>" onclick="return confirm('Weet je zeker dat je dit project wilt verwijderen?')" class="btn btn-danger btn-sm">Verwijderen</a>
+                <a href="project.php?id=<?= $projectRows[$index]['id']; ?>" class="btn btn-info btn-sm">Bekijken</a>
+                <a href="?delete=<?= $projectRows[$index]['id']; ?>" onclick="return confirm('Weet je zeker dat je dit project wilt verwijderen?')" class="btn btn-danger btn-sm">Verwijderen</a>
             </td>
         </tr>
     <?php endforeach; ?>

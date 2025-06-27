@@ -4,12 +4,14 @@ class Project {
     private $description;
     private $date;
     private $category;
+    private $image;
 
-    public function __construct($title, $description, $date, $category) {
+    public function __construct($title, $description, $date, $category, $image) {
         $this->title = $title;
         $this->description = $description;
         $this->date = $date;
         $this->category = $category;
+        $this->image = $image;
     }
 
     public function getTitle() {
@@ -42,6 +44,14 @@ class Project {
 
     public function setCategory($category) {
         $this->category = $category;
+    }
+
+    public function getImage() {
+        return $this->image;
+    }
+
+    public function setImage($image) {
+        $this->image = $image;
     }
 }
 ?>

@@ -5,11 +5,12 @@ class SchoolProject extends Project {
     private $subject;
     private $teacherName;
 
-    public function __construct($title, $description, $date, $category, $subject, $teacherName) {
-        parent::__construct($title, $description, $date, $category);
+    public function __construct($title, $description, $date, $category, $image, $subject, $teacherName) {
+        parent::__construct($title, $description, $date, $category, $image);
         $this->subject = $subject;
         $this->teacherName = $teacherName;
     }
+
     public function getSubject() {
         return $this->subject;
     }

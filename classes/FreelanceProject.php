@@ -5,8 +5,8 @@ class FreelanceProject extends Project {
     private $clientName;
     private $budget;
 
-    public function __construct($title, $description, $date, $category, $clientName, $budget) {
-        parent::__construct($title, $description, $date, $category);
+    public function __construct($title, $description, $date, $category, $image, $clientName, $budget) {
+        parent::__construct($title, $description, $date, $category, $image);
         $this->clientName = $clientName;
         $this->budget = $budget;
     }

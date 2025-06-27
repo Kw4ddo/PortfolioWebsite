@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/db.php';
 require_once 'includes/header.php';
+require_once 'classes/Project.php';
 
 $categoryFilter = isset($_GET['category']) ? $_GET['category'] : null;
 
@@ -12,7 +13,10 @@ if ($categoryFilter) {
     $stmt->execute();
 }
 
-$projects = $stmt->fetchAll();
+$projects = [];
+while ($row = $stmt->fetch()) {
+    $projects[] = new Project($row['title'], $row['description'], $row['date'], $row['category'], $row['image']);
+}
 ?>
 
 <h2>Projectenoverzicht</h2>
@@ -28,23 +32,22 @@ $projects = $stmt->fetchAll();
         <?php foreach ($projects as $project): ?>
             <div class="col-md-4">
                 <div class="card mb-4">
-                    <?php if (!empty($project['image'])): ?>
-                        <img src="assets/img/<?= htmlspecialchars($project['image']); ?>" class="card-img-top" style="max-height:200px;object-fit:cover;">
+                    <?php if (method_exists($project, 'getImage') && !empty($project->getImage())): ?>
+                        <img src="assets/img/<?= htmlspecialchars($project->getImage()); ?>" class="card-img-top" style="max-height:200px;object-fit:cover;">
                     <?php endif; ?>
                     <div class="card-body">
-                        <h5 class="card-title"><?= htmlspecialchars($project['title']); ?></h5>
-                        <p class="card-text"><?= htmlspecialchars(substr($project['description'], 0, 100)); ?>...</p>
+                        <h5 class="card-title"><?= htmlspecialchars($project->getTitle()); ?></h5>
+                        <p class="card-text"><?= htmlspecialchars(substr($project->getDescription(), 0, 100)); ?>...</p>
                         <p>
                             <strong>Categorie:</strong>
-                            <?php if (strtolower($project['category']) == 'school'): ?>
+                            <?php if (strtolower($project->getCategory()) == 'school'): ?>
                                 <span class="badge bg-primary">School</span>
-                            <?php elseif (strtolower($project['category']) == 'freelance'): ?>
+                            <?php elseif (strtolower($project->getCategory()) == 'freelance'): ?>
                                 <span class="badge bg-success">Freelance</span>
                             <?php else: ?>
-                                <span class="badge bg-secondary"><?= htmlspecialchars($project['category']); ?></span>
+                                <span class="badge bg-secondary"><?= htmlspecialchars($project->getCategory()); ?></span>
                             <?php endif; ?>
                         </p>
-                        <a href="project.php?id=<?= $project['id']; ?>" class="btn btn-outline-primary">Bekijk Project</a>
                     </div>
                 </div>
             </div>

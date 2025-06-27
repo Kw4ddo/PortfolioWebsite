@@ -11,8 +11,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $password = $_POST['password'] ?? '';
 
     if ($user->login($email, $password)) {
-        header("Location: dashboard.php");
-        exit();
+        if ($_SESSION['role'] === 'admin') {
+            header("Location: dashboard.php");
+            exit();
+        } else {
+            header("Location: index.php");
+            exit();
+        }
     } else {
         $error = "Ongeldige inloggegevens.";
     }
